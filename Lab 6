@@ -58,6 +58,34 @@ def audit_credits(student_bins):
             total_credits[category] += credits
     return total_credits
 
+# Step 4) bin_student_courses
+def bin_student_courses(transcript, gen_ed_mapping):
+      """This function will organize completed courses into lists with their assigned gen ed categories"""
+      # Create an empty variable dictionary to organize completed courses by their category
+      student_bins = {}
+      # Create an empty list for each Gen Ed Category in the mapping dictionary
+      for category in gen_ed_mapping:
+          student_bins[category] = []
+          
+    # Adds an empty list for courses without a category
+      student_bins["Uncategorized"] = []
+
+      # Goes through each course in the transcript
+      for course in transcript:
+          # Call step 1 to format each course string into a dictionary
+          course_info = parse_course_record(course)
+          # This will only include the completed courses 
+          if course_info["status"] == "COMPLETED":
+              # Calls step 2 function to get category of completed course
+              category = get_gen_ed_category(course_info["code"], gen_ed_mapping)
+            # Adds course code and credits to category
+              student_bins[category].append((course_info["code"], course_info["credits"]))
+
+      return student_bins
+
+          
+
+
 # Create a dictionary variable with all the general education categories and sample course codes
 gen_ed_categories = {
     "Creativity and Innovation": ["ART-133", "ART-291", "ENG-105", "GSWS-210", "MUS-330"],
@@ -83,6 +111,7 @@ def main():
     # print("-" * 100)
     # for course in sample_transcript:
     #      print(parse_course_record(course))
+
 # Test 2) Use course codes to determine what gen ed category it will go into
     # print("-" * 100)
     # print("ART-291:", get_gen_ed_category ("ART-291", gen_ed_categories))
@@ -92,22 +121,43 @@ def main():
     # print("MTH-111:", get_gen_ed_category ("MTH-111", gen_ed_categories))
     # print("WR-123:", get_gen_ed_category ("WR-123", gen_ed_categories))
     # print("BA-600:", get_gen_ed_category ("BA-600", gen_ed_categories))
+
 # Test 3)
     # Created a new dictionary to hold an example of a students transcript with course codes and credit values 
-    student_bins = {
-        "Creativity and Innovation": [("ART-133", 4)],
-        "Communication and Expression": [("ARTH-204", 4)],
-        "Equity, Diversity, and Inclusion": [("GSWS-312", 4), ("MUS-205", 4)],
-        "Inquiry and Analysis": [("GSWS-300", 4), ("ES-200", 4)],
-        "Numerical Literacy": [("CS-346", 4), ("STAT-243z", 4)],
-        "Purposeful Learning": [("WR-122z", 3),("WR-123", 3)],
-        "Uncategorized":  [("BA-600", 4)]  
-   } 
-    # call audit credits function to calculate and store the total credits for each category
-    credit_results = audit_credits(student_bins)
-    # I used a for loop to go through each Gen Ed category in the calculated results
-    for category in credit_results:
-            # This prints the category name and how much credits it gives
-            print("-" * 100)
-            print(category, ":", credit_results[category]) 
+#     student_bins = {
+#         "Creativity and Innovation": [("ART-133", 4)],
+#         "Communication and Expression": [("ARTH-204", 4)],
+#         "Equity, Diversity, and Inclusion": [("GSWS-312", 4), ("MUS-205", 4)],
+#         "Inquiry and Analysis": [("GSWS-300", 4), ("ES-200", 4)],
+#         "Numerical Literacy": [("CS-346", 4), ("STAT-243z", 4)],
+#         "Purposeful Learning": [("WR-122z", 3),("WR-123", 3)],
+#         "Uncategorized":  [("BA-600", 4)]  
+#    } 
+#     # call audit credits function to calculate and store the total credits for each category
+#     credit_results = audit_credits(student_bins)
+#     # I used a for loop to go through each Gen Ed category in the calculated results
+#     for category in credit_results:
+#             # This prints the category name and how much credits it gives
+#             print("-" * 100)
+#             print(category, ":", credit_results[category]) 
+
+# Test 4) Organizing only Completed Courses into Gen Ed Categories
+# First Transcript Sample
+    # test_transcript = (
+    #     "MTH-111, Pre-Calculus, 4, COMPLETED",
+    #     "WR-122z, Composition II, 3, INCOMPLETE"
+    # )
+    #Second Transcript Sample
+    test_transcript = (
+        "MTH-111, Pre-Calculus, 4, COMPLETED",
+        "CS-200, Intro to Computer Science, 4, COMPLETED",
+        "WR-122z, Composition II, 3, INCOMPLETE",
+        "BI-130, Marine Biology, 3, COMPLETED",
+        "BA 600, Business Masters, 4, COMPLETED"
+    )
+    student_results = bin_student_courses(test_transcript, gen_ed_categories)
+
+    for category in student_results:
+        print("-" * 100)
+        print(category, ":", student_results[category])
 main()
