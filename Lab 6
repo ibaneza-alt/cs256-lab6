@@ -34,6 +34,30 @@ def get_gen_ed_category(course_code, gen_ed_mapping):
     # But if the for loops complete, and the course code was not found then "uncategorized" will be returned         
     return "Uncategorized"
 
+# Step 3) audit_credits
+def audit_credits(student_bins):
+    """This function will calculate the total credits that a student has in each category"""
+
+    # Created a new variable dictionary that sets each gen ed category to a value of 0
+    total_credits = {
+        "Creativity and Innovation": 0,
+        "Communication and Expression": 0,
+        "Equity, Diversity, and Inclusion": 0,
+        "Inquiry and Analysis": 0,
+        "Numerical Literacy": 0,
+        "Purposeful Learning": 0,
+        "Uncategorized": 0
+    }
+    # This for loop goes through each Gen Ed category in the student bins dictionary
+    for category in student_bins:
+        # Nestled for loop to go through each course tuple in category 
+        for course in student_bins[category]:
+            # Get the value of credits from position 1 of course
+            credits = course[1]
+            # Add up the category credits
+            total_credits[category] += credits
+    return total_credits
+
 # Create a dictionary variable with all the general education categories and sample course codes
 gen_ed_categories = {
     "Creativity and Innovation": ["ART-133", "ART-291", "ENG-105", "GSWS-210", "MUS-330"],
@@ -60,13 +84,30 @@ def main():
     # for course in sample_transcript:
     #      print(parse_course_record(course))
 # Test 2) Use course codes to determine what gen ed category it will go into
-    print("-" * 100)
-    print("ART-291:", get_gen_ed_category ("ART-291", gen_ed_categories))
-    print("BI-130:", get_gen_ed_category ("BI-130", gen_ed_categories))
-    print("ART-450:", get_gen_ed_category ("ART-450", gen_ed_categories))
-    print("ES-200:", get_gen_ed_category ("ES-200", gen_ed_categories))
-    print("MTH-111:", get_gen_ed_category ("MTH-111", gen_ed_categories))
-    print("WR-123:", get_gen_ed_category ("WR-123", gen_ed_categories))
-    print("BA-600:", get_gen_ed_category ("BA-600", gen_ed_categories))     
-   
+    # print("-" * 100)
+    # print("ART-291:", get_gen_ed_category ("ART-291", gen_ed_categories))
+    # print("BI-130:", get_gen_ed_category ("BI-130", gen_ed_categories))
+    # print("ART-450:", get_gen_ed_category ("ART-450", gen_ed_categories))
+    # print("ES-200:", get_gen_ed_category ("ES-200", gen_ed_categories))
+    # print("MTH-111:", get_gen_ed_category ("MTH-111", gen_ed_categories))
+    # print("WR-123:", get_gen_ed_category ("WR-123", gen_ed_categories))
+    # print("BA-600:", get_gen_ed_category ("BA-600", gen_ed_categories))
+# Test 3)
+    # Created a new dictionary to hold an example of a students transcript with course codes and credit values 
+    student_bins = {
+        "Creativity and Innovation": [("ART-133", 4)],
+        "Communication and Expression": [("ARTH-204", 4)],
+        "Equity, Diversity, and Inclusion": [("GSWS-312", 4), ("MUS-205", 4)],
+        "Inquiry and Analysis": [("GSWS-300", 4), ("ES-200", 4)],
+        "Numerical Literacy": [("CS-346", 4), ("STAT-243z", 4)],
+        "Purposeful Learning": [("WR-122z", 3),("WR-123", 3)],
+        "Uncategorized":  [("BA-600", 4)]  
+   } 
+    # call audit credits function to calculate and store the total credits for each category
+    credit_results = audit_credits(student_bins)
+    # I used a for loop to go through each Gen Ed category in the calculated results
+    for category in credit_results:
+            # This prints the category name and how much credits it gives
+            print("-" * 100)
+            print(category, ":", credit_results[category]) 
 main()
