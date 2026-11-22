@@ -1,1 +1,42 @@
-hello 
+# Step 1) Format a single course into a structured dictionary
+
+def parse_course_record(course_string):
+    """This function will orgnanize messy course strings into a structured dictionary that holds key values of course code, name, credits, and status"""
+
+    # This new variable will separate the 4 parts retrieved from the courses string with a comma
+    course_info = course_string.split(",")
+
+    # Will retrieve the code section of the course and remove any white spaces while also keeping capitalization consistent 
+    code = course_info[0].strip().upper()
+    # Get name of course and remove whitespace  
+    name = course_info[1].strip()
+    # Get number of credits from course and remove whitespace
+    credits = int(course_info[2].strip())
+    # Get status of course and remove whitespace and use uppercase
+    status = course_info[3].strip().upper()
+
+    # Returns a dictionary with key information of the course
+    return {
+        "code": code,
+        "name": name,
+        "credits": credits,
+        "status": status
+    }
+
+# Create main with sample transcript extracted from lab
+def main():
+    # The transcript will consist of messy strings that will be fixed with string methods mentioned above
+    sample_transcript = (
+        "    MTH-111, Pre-calculus, 4, COMPLETED    ",
+        "  WR-121z, Composition I, 3, Completed   ",
+        "  WR-122z,  Composition II, 3, Incomplete   ",
+        "     GSWS-210, Violence Prevention, 4, completed"
+    )
+
+# Test 1) Organize courses into structured dictionaries
+    print("-" * 100)
+    for course in sample_transcript:
+         print(parse_course_record(course))
+           
+   
+main()
