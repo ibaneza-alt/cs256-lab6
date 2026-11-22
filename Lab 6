@@ -1,5 +1,4 @@
-# Step 1) Format a single course into a structured dictionary
-
+# Step 1) parse_course_record
 def parse_course_record(course_string):
     """This function will orgnanize messy course strings into a structured dictionary that holds key values of course code, name, credits, and status"""
 
@@ -22,6 +21,29 @@ def parse_course_record(course_string):
         "credits": credits,
         "status": status
     }
+# Step 2) get_gen_ed_category
+def get_gen_ed_category(course_code, gen_ed_mapping):
+    """This function will determine which general education bin a course will be sent to"""
+    # First for loop will check whether each gen ed category is actually in the gen ed mapping dictionary
+    for gen_ed_category in gen_ed_mapping:
+        # This nestled for loop will then check that each approved course code is in the gen ed mapping dictioanry
+        for code in gen_ed_mapping[gen_ed_category]:
+            # And if the course code was found within the dictionary then the gen ed category will be returned
+            if course_code.upper() == code.upper():
+                return gen_ed_category
+    # But if the for loops complete, and the course code was not found then "uncategorized" will be returned         
+    return "Uncategorized"
+
+# Create a dictionary variable with all the general education categories and sample course codes
+gen_ed_categories = {
+    "Creativity and Innovation": ["ART-133", "ART-291", "ENG-105", "GSWS-210", "MUS-330"],
+    "Communication and Expression": ["ARTH-204", "ARTH-205", "BA-450", "BI-130", "MUS-311"],
+    "Equity, Diversity, and Inclusion": ["ART-450", "ENG-214", "ES-220", "GSWS-312","MUS-205"],
+    "Inquiry and Analysis": ["GSWS-300", "ES-200", "ENG-280", "BI-101", "COMM-482"],
+    "Numerical Literacy": ["CS-200", "MTH-111", "CS-346", "STAT-243z"],
+    "Purposeful Learning": ["WR-121z","WR-122z", "WR-123"]
+    }
+
 
 # Create main with sample transcript extracted from lab
 def main():
@@ -34,9 +56,17 @@ def main():
     )
 
 # Test 1) Organize courses into structured dictionaries
+    # print("-" * 100)
+    # for course in sample_transcript:
+    #      print(parse_course_record(course))
+# Test 2) Use course codes to determine what gen ed category it will go into
     print("-" * 100)
-    for course in sample_transcript:
-         print(parse_course_record(course))
-           
+    print("ART-291:", get_gen_ed_category ("ART-291", gen_ed_categories))
+    print("BI-130:", get_gen_ed_category ("BI-130", gen_ed_categories))
+    print("ART-450:", get_gen_ed_category ("ART-450", gen_ed_categories))
+    print("ES-200:", get_gen_ed_category ("ES-200", gen_ed_categories))
+    print("MTH-111:", get_gen_ed_category ("MTH-111", gen_ed_categories))
+    print("WR-123:", get_gen_ed_category ("WR-123", gen_ed_categories))
+    print("BA-600:", get_gen_ed_category ("BA-600", gen_ed_categories))     
    
 main()
